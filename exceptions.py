@@ -1,52 +1,18 @@
-# This file is dual licensed under the terms of the Apache License, Version
-# 2.0, and the BSD License. See the LICENSE file in the root of this repository
-# for complete details.
+"""Exceptions used with python-docx.
 
-from __future__ import annotations
-
-import typing
-
-from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions
-
-if typing.TYPE_CHECKING:
-    from cryptography.hazmat.bindings._rust import openssl as rust_openssl
-
-_Reasons = rust_exceptions._Reasons
+The base exception class is PythonDocxError.
+"""
 
 
-class UnsupportedAlgorithm(Exception):
-    def __init__(self, message: str, reason: _Reasons | None = None) -> None:
-        super().__init__(message)
-        self._reason = reason
+class PythonDocxError(Exception):
+    """Generic error class."""
 
 
-class AlreadyFinalized(Exception):
-    pass
+class InvalidSpanError(PythonDocxError):
+    """Raised when an invalid merge region is specified in a request to merge table
+    cells."""
 
 
-class AlreadyUpdated(Exception):
-    pass
-
-
-class NotYetFinalized(Exception):
-    pass
-
-
-class InvalidTag(Exception):
-    pass
-
-
-class InvalidSignature(Exception):
-    pass
-
-
-class InternalError(Exception):
-    def __init__(
-        self, msg: str, err_code: list[rust_openssl.OpenSSLError]
-    ) -> None:
-        super().__init__(msg)
-        self.err_code = err_code
-
-
-class InvalidKey(Exception):
-    pass
+class InvalidXmlError(PythonDocxError):
+    """Raised when invalid XML is encountered, such as on attempt to access a missing
+    required child element."""
