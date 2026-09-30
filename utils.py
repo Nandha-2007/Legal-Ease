@@ -1,328 +1,136 @@
-"""
-General helpers required for `tqdm.std`.
-"""
-import os
-import re
+# This file is dual licensed under the terms of the Apache License, Version
+# 2.0, and the BSD License. See the LICENSE file in the root of this repository
+# for complete details.
+
+from __future__ import annotations
+
+import enum
 import sys
-from functools import partial, partialmethod, wraps
-from inspect import signature
-# TODO consider using wcswidth third-party package for 0-width characters
-from unicodedata import east_asian_width
-from warnings import warn
-from weakref import proxy
-
-_range, _unich, _unicode, _basestring = range, chr, str, str
-CUR_OS = sys.platform
-IS_WIN = any(CUR_OS.startswith(i) for i in ['win32', 'cygwin'])
-IS_NIX = any(CUR_OS.startswith(i) for i in ['aix', 'linux', 'darwin', 'freebsd'])
-RE_ANSI = re.compile(r"\x1b\[[;\d]*[A-Za-z]")
-
-try:
-    if IS_WIN:
-        import colorama
-    else:
-        raise ImportError
-except ImportError:
-    colorama = None
-else:
-    try:
-        colorama.init(strip=False)
-    except TypeError:
-        colorama.init()
+import types
+import typing
+import warnings
+from collections.abc import Sequence
 
 
-def envwrap(name, app="", types=None, is_method=False):
-    """
-    Basic (env-only) version of [envwrap](https://github.com/tqdm/envwrap).
-    Install `envwrap` for config file support.
-    """
-    if types is None:
-        types = {}
-    if name[-1] == "_":
-        name = name[:-1]
-        warn("Trailing underscore in `name` is automatic", DeprecationWarning, stacklevel=2)
-    prefixes = (name, f"{name}_{app}") if app else (name,)
-    env_overrides = {}
-    for prefix in prefixes:
-        prefix = prefix.upper() + "_"
-        i = len(prefix)
-        env_overrides.update(
-            (k[i:].lower(), v) for k, v in os.environ.items() if k.startswith(prefix))
-    part = partialmethod if is_method else partial
-
-    def wrap(func):
-        params = signature(func).parameters
-        # ignore unknown env vars
-        overrides = {k: v for k, v in env_overrides.items() if k in params}
-        # infer overrides' `type`s
-        for k in overrides:
-            param = params[k]
-            if param.annotation is not param.empty:  # typehints
-                for typ in getattr(param.annotation, '__args__', (param.annotation,)):
-                    try:
-                        overrides[k] = typ(overrides[k])
-                    except Exception:  # nosec B110
-                        pass
-                    else:
-                        break
-            elif param.default is not None:  # type of default value
-                overrides[k] = type(param.default)(overrides[k])
-            else:
-                try:  # `types` fallback
-                    overrides[k] = types[k](overrides[k])
-                except KeyError:  # keep unconverted (`str`)
-                    pass
-        return part(func, **overrides)
-    return wrap
-
-
-try:
-    from envwrap import envwrap  # noqa: F401, F811, pylint: disable=unused-import
-except ModuleNotFoundError:
+# We use a UserWarning subclass, instead of DeprecationWarning, because CPython
+# decided deprecation warnings should be invisible by default.
+class CryptographyDeprecationWarning(UserWarning):
     pass
 
 
-class FormatReplace:
-    """
-    >>> a = FormatReplace('something')
-    >>> f"{a:5d}"
-    'something'
-    """  # NOQA: P102
-    def __init__(self, replace=''):
-        self.replace = replace
-        self.format_called = 0
-
-    def __format__(self, _):
-        self.format_called += 1
-        return self.replace
+# Several APIs were deprecated with no specific end-of-life date because of the
+# ubiquity of their use. They should not be removed until we agree on when that
+# cycle ends.
+DeprecatedIn36 = CryptographyDeprecationWarning
+DeprecatedIn40 = CryptographyDeprecationWarning
+DeprecatedIn41 = CryptographyDeprecationWarning
+DeprecatedIn42 = CryptographyDeprecationWarning
+DeprecatedIn43 = CryptographyDeprecationWarning
+DeprecatedIn47 = CryptographyDeprecationWarning
+DeprecatedIn50 = CryptographyDeprecationWarning
 
 
-class Comparable:
-    """Assumes child has self._comparable attr/@property"""
-    def __lt__(self, other):
-        return self._comparable < other._comparable
-
-    def __le__(self, other):
-        return (self < other) or (self == other)
-
-    def __eq__(self, other):
-        return self._comparable == other._comparable
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __gt__(self, other):
-        return not self <= other
-
-    def __ge__(self, other):
-        return not self < other
+# If you're wondering why we don't use `Buffer`, it's because `Buffer` would
+# be more accurately named: Bufferable. It means something which has an
+# `__buffer__`. Which means you can't actually treat the result as a buffer
+# (and do things like take a `len()`).
+Buffer = typing.Union[bytes, bytearray, memoryview]
 
 
-class ObjectWrapper:
-    def __getattr__(self, name):
-        return getattr(self._wrapped, name)
-
-    def __setattr__(self, name, value):
-        return setattr(self._wrapped, name, value)
-
-    def wrapper_getattr(self, name):
-        """Actual `self.getattr` rather than self._wrapped.getattr"""
-        try:
-            return object.__getattr__(self, name)
-        except AttributeError:  # py2
-            return getattr(self, name)
-
-    def wrapper_setattr(self, name, value):
-        """Actual `self.setattr` rather than self._wrapped.setattr"""
-        return object.__setattr__(self, name, value)
-
-    def __init__(self, wrapped):
-        """
-        Thin wrapper around a given object
-        """
-        self.wrapper_setattr('_wrapped', wrapped)
+def _check_bytes(name: str, value: bytes) -> None:
+    if not isinstance(value, bytes):
+        raise TypeError(f"{name} must be bytes")
 
 
-class SimpleTextIOWrapper(ObjectWrapper):
-    """
-    Change only `.write()` of the wrapped object by encoding the passed
-    value and passing the result to the wrapped object's `.write()` method.
-    """
-    # pylint: disable=too-few-public-methods
-    def __init__(self, wrapped, encoding):
-        super().__init__(wrapped)
-        self.wrapper_setattr('encoding', encoding)
-
-    def write(self, s):
-        """
-        Encode `s` and pass to the wrapped object's `.write()` method.
-        """
-        return self._wrapped.write(s.encode(self.wrapper_getattr('encoding')))
-
-    def __eq__(self, other):
-        return self._wrapped == getattr(other, '_wrapped', other)
+def _check_byteslike(name: str, value: Buffer) -> None:
+    if isinstance(value, (bytes, bytearray, memoryview)):
+        return
+    try:
+        memoryview(value)
+    except TypeError:
+        raise TypeError(f"{name} must be bytes-like")
 
 
-class DisableOnWriteError(ObjectWrapper):
-    """
-    Disable the given `tqdm_instance` upon `write()` or `flush()` errors.
-    """
-    @staticmethod
-    def disable_on_exception(tqdm_instance, func):
-        """
-        Quietly set `tqdm_instance.miniters=inf` if `func` raises `errno=5`.
-        """
-        tqdm_instance = proxy(tqdm_instance)
-
-        def inner(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except OSError as e:
-                if e.errno != 5:
-                    raise
-                try:
-                    tqdm_instance.miniters = float('inf')
-                except ReferenceError:
-                    pass
-            except ValueError as e:
-                if 'closed' not in str(e):
-                    raise
-                try:
-                    tqdm_instance.miniters = float('inf')
-                except ReferenceError:
-                    pass
-        return inner
-
-    def __init__(self, wrapped, tqdm_instance):  # noqa: B042
-        super().__init__(wrapped)
-        if hasattr(wrapped, 'write'):
-            self.wrapper_setattr(
-                'write', self.disable_on_exception(tqdm_instance, wrapped.write))
-        if hasattr(wrapped, 'flush'):
-            self.wrapper_setattr(
-                'flush', self.disable_on_exception(tqdm_instance, wrapped.flush))
-
-    def __eq__(self, other):
-        return self._wrapped == getattr(other, '_wrapped', other)
+def int_to_bytes(integer: int, length: int | None = None) -> bytes:
+    if length == 0:
+        raise ValueError("length argument can't be 0")
+    return integer.to_bytes(
+        length or (integer.bit_length() + 7) // 8 or 1, "big"
+    )
 
 
-class CallbackIOWrapper(ObjectWrapper):
-    def __init__(self, callback, stream, method="read"):
-        """
-        Wrap a given `file`-like object's `read()` or `write()` to report
-        lengths to the given `callback`
-        """
-        super().__init__(stream)
-        func = getattr(stream, method)
-        if method == "write":
-            @wraps(func)
-            def write(data, *args, **kwargs):
-                res = func(data, *args, **kwargs)
-                callback(len(data))
-                return res
-            self.wrapper_setattr('write', write)
-        elif method == "read":
-            @wraps(func)
-            def read(*args, **kwargs):
-                data = func(*args, **kwargs)
-                callback(len(data))
-                return data
-            self.wrapper_setattr('read', read)
+class InterfaceNotImplemented(Exception):
+    pass
+
+
+class _DeprecatedValue:
+    def __init__(self, value: object, message: str, warning_class):
+        self.value = value
+        self.message = message
+        self.warning_class = warning_class
+
+
+class _ModuleWithDeprecations(types.ModuleType):
+    def __init__(self, module: types.ModuleType):
+        super().__init__(module.__name__)
+        self.__dict__["_module"] = module
+
+    def __getattr__(self, name: str) -> typing.Any:
+        obj = getattr(self._module, name)
+        if isinstance(obj, _DeprecatedValue):
+            warnings.warn(obj.message, obj.warning_class, stacklevel=2)
+            obj = obj.value
         else:
-            raise KeyError("Can only wrap read/write methods")
+            # Cache non-deprecated attributes in our own `__dict__` so that
+            # subsequent lookups are ordinary module attribute accesses and
+            # don't pay for this `__getattr__` (which would otherwise defeat
+            # CPython's LOAD_ATTR module caching for every attribute of the
+            # module). `__setattr__` and `__delattr__` keep the cache
+            # coherent.
+            self.__dict__[name] = obj
+        return obj
+
+    def __setattr__(self, attr: str, value: object) -> None:
+        if isinstance(value, _DeprecatedValue):
+            self.__dict__.pop(attr, None)
+        else:
+            self.__dict__[attr] = value
+        setattr(self._module, attr, value)
+
+    def __delattr__(self, attr: str) -> None:
+        obj = getattr(self._module, attr)
+        if isinstance(obj, _DeprecatedValue):
+            warnings.warn(obj.message, obj.warning_class, stacklevel=2)
+
+        self.__dict__.pop(attr, None)
+        delattr(self._module, attr)
+
+    def __dir__(self) -> Sequence[str]:
+        return ["_module", *dir(self._module)]
 
 
-def _is_utf(encoding):
-    try:
-        '\u2588\u2589'.encode(encoding)
-    except UnicodeEncodeError:
-        return False
-    except Exception:
-        try:
-            return encoding.lower().startswith('utf-') or ('U8' == encoding)
-        except Exception:
-            return False
-    else:
-        return True
+def deprecated(
+    value: object,
+    module_name: str,
+    message: str,
+    warning_class: type[Warning],
+    name: str | None = None,
+) -> _DeprecatedValue:
+    module = sys.modules[module_name]
+    if not isinstance(module, _ModuleWithDeprecations):
+        sys.modules[module_name] = module = _ModuleWithDeprecations(module)
+    dv = _DeprecatedValue(value, message, warning_class)
+    # Maintain backwards compatibility with `name is None` for pyOpenSSL.
+    if name is not None:
+        setattr(module, name, dv)
+    return dv
 
 
-def _supports_unicode(fp):
-    try:
-        return _is_utf(fp.encoding)
-    except AttributeError:
-        return False
+# Python 3.10 changed representation of enums. We use well-defined object
+# representation and string representation from Python 3.9.
+class Enum(enum.Enum):
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}.{self._name_}: {self._value_!r}>"
 
-
-def _is_ascii(s):
-    if isinstance(s, str):
-        for c in s:
-            if ord(c) > 255:
-                return False
-        return True
-    return _supports_unicode(s)
-
-
-def _screen_shape_wrapper():  # pragma: no cover
-    """
-    Return a function which returns console dimensions (width, height).
-    Supported: linux, osx, windows, cygwin.
-    """
-    def inner(fp):
-        try:
-            from os import get_terminal_size
-            cols, lines = get_terminal_size(getattr(fp, 'fileno', lambda: None)())
-            return cols - 1, lines - 1
-        except Exception:
-            return None, None
-
-    return inner
-
-
-def _environ_cols_wrapper():  # pragma: no cover
-    """
-    Return a function which returns console width.
-    Supported: linux, osx, windows, cygwin.
-    """
-    warn("Use `_screen_shape_wrapper()(file)[0]` instead of"
-         " `_environ_cols_wrapper()(file)`", DeprecationWarning, stacklevel=2)
-    shape = _screen_shape_wrapper()
-    if not shape:
-        return None
-
-    @wraps(shape)
-    def inner(fp):
-        return shape(fp)[0]
-
-    return inner
-
-
-def _term_move_up():  # pragma: no cover
-    return '' if (os.name == 'nt') and (colorama is None) else '\x1b[A'
-
-
-def _text_width(s):
-    return sum(2 if east_asian_width(ch) in 'FW' else 1 for ch in str(s))
-
-
-def disp_len(data):
-    """
-    Returns the real on-screen length of a string which may contain
-    ANSI control codes and wide chars.
-    """
-    return _text_width(RE_ANSI.sub('', data))
-
-
-def disp_trim(data, length):
-    """
-    Trim a string which may contain ANSI control characters.
-    """
-    if len(data) == disp_len(data):
-        return data[:length]
-
-    ansi_present = bool(RE_ANSI.search(data))
-    while disp_len(data) > length:  # carefully delete one char at a time
-        data = data[:-1]
-    if ansi_present and bool(RE_ANSI.search(data)):
-        # assume ANSI reset is required
-        return data if data.endswith("\033[0m") else data + "\033[0m"
-    return data
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}.{self._name_}"
