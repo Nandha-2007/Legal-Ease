@@ -24,29 +24,7 @@ from .discuss_service import (
     MessagePrompt,
 )
 from .model import Model
-from .model_service import (
-    CreateTunedModelMetadata,
-    CreateTunedModelRequest,
-    DeleteTunedModelRequest,
-    GetModelRequest,
-    GetTunedModelRequest,
-    ListModelsRequest,
-    ListModelsResponse,
-    ListTunedModelsRequest,
-    ListTunedModelsResponse,
-    UpdateTunedModelRequest,
-)
-from .permission import Permission
-from .permission_service import (
-    CreatePermissionRequest,
-    DeletePermissionRequest,
-    GetPermissionRequest,
-    ListPermissionsRequest,
-    ListPermissionsResponse,
-    TransferOwnershipRequest,
-    TransferOwnershipResponse,
-    UpdatePermissionRequest,
-)
+from .model_service import GetModelRequest, ListModelsRequest, ListModelsResponse
 from .safety import (
     ContentFilter,
     HarmCategory,
@@ -55,10 +33,6 @@ from .safety import (
     SafetySetting,
 )
 from .text_service import (
-    BatchEmbedTextRequest,
-    BatchEmbedTextResponse,
-    CountTextTokensRequest,
-    CountTextTokensResponse,
     Embedding,
     EmbedTextRequest,
     EmbedTextResponse,
@@ -66,16 +40,6 @@ from .text_service import (
     GenerateTextResponse,
     TextCompletion,
     TextPrompt,
-)
-from .tuned_model import (
-    Dataset,
-    Hyperparameters,
-    TunedModel,
-    TunedModelSource,
-    TuningExample,
-    TuningExamples,
-    TuningSnapshot,
-    TuningTask,
 )
 
 __all__ = (
@@ -89,34 +53,14 @@ __all__ = (
     "Message",
     "MessagePrompt",
     "Model",
-    "CreateTunedModelMetadata",
-    "CreateTunedModelRequest",
-    "DeleteTunedModelRequest",
     "GetModelRequest",
-    "GetTunedModelRequest",
     "ListModelsRequest",
     "ListModelsResponse",
-    "ListTunedModelsRequest",
-    "ListTunedModelsResponse",
-    "UpdateTunedModelRequest",
-    "Permission",
-    "CreatePermissionRequest",
-    "DeletePermissionRequest",
-    "GetPermissionRequest",
-    "ListPermissionsRequest",
-    "ListPermissionsResponse",
-    "TransferOwnershipRequest",
-    "TransferOwnershipResponse",
-    "UpdatePermissionRequest",
     "ContentFilter",
     "SafetyFeedback",
     "SafetyRating",
     "SafetySetting",
     "HarmCategory",
-    "BatchEmbedTextRequest",
-    "BatchEmbedTextResponse",
-    "CountTextTokensRequest",
-    "CountTextTokensResponse",
     "Embedding",
     "EmbedTextRequest",
     "EmbedTextResponse",
@@ -124,12 +68,4 @@ __all__ = (
     "GenerateTextResponse",
     "TextCompletion",
     "TextPrompt",
-    "Dataset",
-    "Hyperparameters",
-    "TunedModel",
-    "TunedModelSource",
-    "TuningExample",
-    "TuningExamples",
-    "TuningSnapshot",
-    "TuningTask",
 )

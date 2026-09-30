@@ -36,16 +36,14 @@ from google.api_core.client_options import ClientOptions
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
 
-from google.ai.generativelanguage_v1beta3 import gapic_version as package_version
+from google.ai.generativelanguage_v1beta2 import gapic_version as package_version
 
 try:
     OptionalRetry = Union[retries.AsyncRetry, gapic_v1.method._MethodDefault, None]
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.AsyncRetry, object, None]  # type: ignore
 
-from google.longrunning import operations_pb2  # type: ignore
-
-from google.ai.generativelanguage_v1beta3.types import safety, text_service
+from google.ai.generativelanguage_v1beta2.types import safety, text_service
 
 from .client import TextServiceClient
 from .transports.base import DEFAULT_CLIENT_INFO, TextServiceTransport
@@ -269,9 +267,9 @@ class TextServiceAsyncClient:
             std_logging.DEBUG
         ):  # pragma: NO COVER
             _LOGGER.debug(
-                "Created client `google.ai.generativelanguage_v1beta3.TextServiceAsyncClient`.",
+                "Created client `google.ai.generativelanguage_v1beta2.TextServiceAsyncClient`.",
                 extra={
-                    "serviceName": "google.ai.generativelanguage.v1beta3.TextService",
+                    "serviceName": "google.ai.generativelanguage.v1beta2.TextService",
                     "universeDomain": getattr(
                         self._client._transport._credentials, "universe_domain", ""
                     ),
@@ -282,7 +280,7 @@ class TextServiceAsyncClient:
                 }
                 if hasattr(self._client._transport, "_credentials")
                 else {
-                    "serviceName": "google.ai.generativelanguage.v1beta3.TextService",
+                    "serviceName": "google.ai.generativelanguage.v1beta2.TextService",
                     "credentialsType": None,
                 },
             )
@@ -314,17 +312,17 @@ class TextServiceAsyncClient:
             # - It may require specifying regional endpoints when creating the service
             #   client as shown in:
             #   https://googleapis.dev/python/google-api-core/latest/client_options.html
-            from google.ai import generativelanguage_v1beta3
+            from google.ai import generativelanguage_v1beta2
 
             async def sample_generate_text():
                 # Create a client
-                client = generativelanguage_v1beta3.TextServiceAsyncClient()
+                client = generativelanguage_v1beta2.TextServiceAsyncClient()
 
                 # Initialize request argument(s)
-                prompt = generativelanguage_v1beta3.TextPrompt()
+                prompt = generativelanguage_v1beta2.TextPrompt()
                 prompt.text = "text_value"
 
-                request = generativelanguage_v1beta3.GenerateTextRequest(
+                request = generativelanguage_v1beta2.GenerateTextRequest(
                     model="model_value",
                     prompt=prompt,
                 )
@@ -336,19 +334,17 @@ class TextServiceAsyncClient:
                 print(response)
 
         Args:
-            request (Optional[Union[google.ai.generativelanguage_v1beta3.types.GenerateTextRequest, dict]]):
+            request (Optional[Union[google.ai.generativelanguage_v1beta2.types.GenerateTextRequest, dict]]):
                 The request object. Request to generate a text completion
                 response from the model.
             model (:class:`str`):
-                Required. The name of the ``Model`` or ``TunedModel`` to
-                use for generating the completion. Examples:
-                models/text-bison-001
-                tunedModels/sentence-translator-u3b7m
+                Required. The model name to use with
+                the format name=models/{model}.
 
                 This corresponds to the ``model`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            prompt (:class:`google.ai.generativelanguage_v1beta3.types.TextPrompt`):
+            prompt (:class:`google.ai.generativelanguage_v1beta2.types.TextPrompt`):
                 Required. The free-form input text
                 given to the model as a prompt.
                 Given a prompt, the model will generate
@@ -359,10 +355,10 @@ class TextServiceAsyncClient:
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             temperature (:class:`float`):
-                Optional. Controls the randomness of the output. Note:
-                The default value varies by model, see the
-                ``Model.temperature`` attribute of the ``Model``
-                returned the ``getModel`` function.
+                Controls the randomness of the output. Note: The default
+                value varies by model, see the ``Model.temperature``
+                attribute of the ``Model`` returned the ``getModel``
+                function.
 
                 Values can range from [0.0,1.0], inclusive. A value
                 closer to 1.0 will produce responses that are more
@@ -374,7 +370,7 @@ class TextServiceAsyncClient:
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             candidate_count (:class:`int`):
-                Optional. Number of generated responses to return.
+                Number of generated responses to return.
 
                 This value must be between [1, 8], inclusive. If unset,
                 this will default to 1.
@@ -383,23 +379,21 @@ class TextServiceAsyncClient:
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             max_output_tokens (:class:`int`):
-                Optional. The maximum number of tokens to include in a
-                candidate.
-
-                If unset, this will default to output_token_limit
-                specified in the ``Model`` specification.
+                The maximum number of tokens to
+                include in a candidate.
+                If unset, this will default to 64.
 
                 This corresponds to the ``max_output_tokens`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             top_p (:class:`float`):
-                Optional. The maximum cumulative probability of tokens
-                to consider when sampling.
+                The maximum cumulative probability of tokens to consider
+                when sampling.
 
                 The model uses combined Top-k and nucleus sampling.
 
                 Tokens are sorted based on their assigned probabilities
-                so that only the most likely tokens are considered.
+                so that only the most liekly tokens are considered.
                 Top-k sampling directly limits the maximum number of
                 tokens to consider, while Nucleus sampling limits number
                 of tokens based on the cumulative probability.
@@ -412,8 +406,7 @@ class TextServiceAsyncClient:
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             top_k (:class:`int`):
-                Optional. The maximum number of tokens to consider when
-                sampling.
+                The maximum number of tokens to consider when sampling.
 
                 The model uses combined Top-k and nucleus sampling.
 
@@ -436,7 +429,7 @@ class TextServiceAsyncClient:
                 be of type `bytes`.
 
         Returns:
-            google.ai.generativelanguage_v1beta3.types.GenerateTextResponse:
+            google.ai.generativelanguage_v1beta2.types.GenerateTextResponse:
                 The response from the model,
                 including candidate completions.
 
@@ -531,14 +524,14 @@ class TextServiceAsyncClient:
             # - It may require specifying regional endpoints when creating the service
             #   client as shown in:
             #   https://googleapis.dev/python/google-api-core/latest/client_options.html
-            from google.ai import generativelanguage_v1beta3
+            from google.ai import generativelanguage_v1beta2
 
             async def sample_embed_text():
                 # Create a client
-                client = generativelanguage_v1beta3.TextServiceAsyncClient()
+                client = generativelanguage_v1beta2.TextServiceAsyncClient()
 
                 # Initialize request argument(s)
-                request = generativelanguage_v1beta3.EmbedTextRequest(
+                request = generativelanguage_v1beta2.EmbedTextRequest(
                     model="model_value",
                     text="text_value",
                 )
@@ -550,7 +543,7 @@ class TextServiceAsyncClient:
                 print(response)
 
         Args:
-            request (Optional[Union[google.ai.generativelanguage_v1beta3.types.EmbedTextRequest, dict]]):
+            request (Optional[Union[google.ai.generativelanguage_v1beta2.types.EmbedTextRequest, dict]]):
                 The request object. Request to get a text embedding from
                 the model.
             model (:class:`str`):
@@ -577,7 +570,7 @@ class TextServiceAsyncClient:
                 be of type `bytes`.
 
         Returns:
-            google.ai.generativelanguage_v1beta3.types.EmbedTextResponse:
+            google.ai.generativelanguage_v1beta2.types.EmbedTextResponse:
                 The response to a EmbedTextRequest.
         """
         # Create or coerce a protobuf request object.
@@ -606,260 +599,6 @@ class TextServiceAsyncClient:
         # and friendly error handling.
         rpc = self._client._transport._wrapped_methods[
             self._client._transport.embed_text
-        ]
-
-        # Certain fields should be provided within the metadata header;
-        # add these here.
-        metadata = tuple(metadata) + (
-            gapic_v1.routing_header.to_grpc_metadata((("model", request.model),)),
-        )
-
-        # Validate the universe domain.
-        self._client._validate_universe_domain()
-
-        # Send the request.
-        response = await rpc(
-            request,
-            retry=retry,
-            timeout=timeout,
-            metadata=metadata,
-        )
-
-        # Done; return the response.
-        return response
-
-    async def batch_embed_text(
-        self,
-        request: Optional[Union[text_service.BatchEmbedTextRequest, dict]] = None,
-        *,
-        model: Optional[str] = None,
-        texts: Optional[MutableSequence[str]] = None,
-        retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-    ) -> text_service.BatchEmbedTextResponse:
-        r"""Generates multiple embeddings from the model given
-        input text in a synchronous call.
-
-        .. code-block:: python
-
-            # This snippet has been automatically generated and should be regarded as a
-            # code template only.
-            # It will require modifications to work:
-            # - It may require correct/in-range values for request initialization.
-            # - It may require specifying regional endpoints when creating the service
-            #   client as shown in:
-            #   https://googleapis.dev/python/google-api-core/latest/client_options.html
-            from google.ai import generativelanguage_v1beta3
-
-            async def sample_batch_embed_text():
-                # Create a client
-                client = generativelanguage_v1beta3.TextServiceAsyncClient()
-
-                # Initialize request argument(s)
-                request = generativelanguage_v1beta3.BatchEmbedTextRequest(
-                    model="model_value",
-                    texts=['texts_value1', 'texts_value2'],
-                )
-
-                # Make the request
-                response = await client.batch_embed_text(request=request)
-
-                # Handle the response
-                print(response)
-
-        Args:
-            request (Optional[Union[google.ai.generativelanguage_v1beta3.types.BatchEmbedTextRequest, dict]]):
-                The request object. Batch request to get a text embedding
-                from the model.
-            model (:class:`str`):
-                Required. The name of the ``Model`` to use for
-                generating the embedding. Examples:
-                models/embedding-gecko-001
-
-                This corresponds to the ``model`` field
-                on the ``request`` instance; if ``request`` is provided, this
-                should not be set.
-            texts (:class:`MutableSequence[str]`):
-                Required. The free-form input texts
-                that the model will turn into an
-                embedding.  The current limit is 100
-                texts, over which an error will be
-                thrown.
-
-                This corresponds to the ``texts`` field
-                on the ``request`` instance; if ``request`` is provided, this
-                should not be set.
-            retry (google.api_core.retry_async.AsyncRetry): Designation of what errors, if any,
-                should be retried.
-            timeout (float): The timeout for this request.
-            metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                sent along with the request as metadata. Normally, each value must be of type `str`,
-                but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                be of type `bytes`.
-
-        Returns:
-            google.ai.generativelanguage_v1beta3.types.BatchEmbedTextResponse:
-                The response to a EmbedTextRequest.
-        """
-        # Create or coerce a protobuf request object.
-        # - Quick check: If we got a request object, we should *not* have
-        #   gotten any keyword arguments that map to the request.
-        has_flattened_params = any([model, texts])
-        if request is not None and has_flattened_params:
-            raise ValueError(
-                "If the `request` argument is set, then none of "
-                "the individual field arguments should be set."
-            )
-
-        # - Use the request object if provided (there's no risk of modifying the input as
-        #   there are no flattened fields), or create one.
-        if not isinstance(request, text_service.BatchEmbedTextRequest):
-            request = text_service.BatchEmbedTextRequest(request)
-
-        # If we have keyword arguments corresponding to fields on the
-        # request, apply these.
-        if model is not None:
-            request.model = model
-        if texts:
-            request.texts.extend(texts)
-
-        # Wrap the RPC method; this adds retry and timeout information,
-        # and friendly error handling.
-        rpc = self._client._transport._wrapped_methods[
-            self._client._transport.batch_embed_text
-        ]
-
-        # Certain fields should be provided within the metadata header;
-        # add these here.
-        metadata = tuple(metadata) + (
-            gapic_v1.routing_header.to_grpc_metadata((("model", request.model),)),
-        )
-
-        # Validate the universe domain.
-        self._client._validate_universe_domain()
-
-        # Send the request.
-        response = await rpc(
-            request,
-            retry=retry,
-            timeout=timeout,
-            metadata=metadata,
-        )
-
-        # Done; return the response.
-        return response
-
-    async def count_text_tokens(
-        self,
-        request: Optional[Union[text_service.CountTextTokensRequest, dict]] = None,
-        *,
-        model: Optional[str] = None,
-        prompt: Optional[text_service.TextPrompt] = None,
-        retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: Union[float, object] = gapic_v1.method.DEFAULT,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-    ) -> text_service.CountTextTokensResponse:
-        r"""Runs a model's tokenizer on a text and returns the
-        token count.
-
-        .. code-block:: python
-
-            # This snippet has been automatically generated and should be regarded as a
-            # code template only.
-            # It will require modifications to work:
-            # - It may require correct/in-range values for request initialization.
-            # - It may require specifying regional endpoints when creating the service
-            #   client as shown in:
-            #   https://googleapis.dev/python/google-api-core/latest/client_options.html
-            from google.ai import generativelanguage_v1beta3
-
-            async def sample_count_text_tokens():
-                # Create a client
-                client = generativelanguage_v1beta3.TextServiceAsyncClient()
-
-                # Initialize request argument(s)
-                prompt = generativelanguage_v1beta3.TextPrompt()
-                prompt.text = "text_value"
-
-                request = generativelanguage_v1beta3.CountTextTokensRequest(
-                    model="model_value",
-                    prompt=prompt,
-                )
-
-                # Make the request
-                response = await client.count_text_tokens(request=request)
-
-                # Handle the response
-                print(response)
-
-        Args:
-            request (Optional[Union[google.ai.generativelanguage_v1beta3.types.CountTextTokensRequest, dict]]):
-                The request object. Counts the number of tokens in the ``prompt`` sent to a
-                model.
-
-                Models may tokenize text differently, so each model may
-                return a different ``token_count``.
-            model (:class:`str`):
-                Required. The model's resource name. This serves as an
-                ID for the Model to use.
-
-                This name should match a model name returned by the
-                ``ListModels`` method.
-
-                Format: ``models/{model}``
-
-                This corresponds to the ``model`` field
-                on the ``request`` instance; if ``request`` is provided, this
-                should not be set.
-            prompt (:class:`google.ai.generativelanguage_v1beta3.types.TextPrompt`):
-                Required. The free-form input text
-                given to the model as a prompt.
-
-                This corresponds to the ``prompt`` field
-                on the ``request`` instance; if ``request`` is provided, this
-                should not be set.
-            retry (google.api_core.retry_async.AsyncRetry): Designation of what errors, if any,
-                should be retried.
-            timeout (float): The timeout for this request.
-            metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                sent along with the request as metadata. Normally, each value must be of type `str`,
-                but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                be of type `bytes`.
-
-        Returns:
-            google.ai.generativelanguage_v1beta3.types.CountTextTokensResponse:
-                A response from CountTextTokens.
-
-                   It returns the model's token_count for the prompt.
-
-        """
-        # Create or coerce a protobuf request object.
-        # - Quick check: If we got a request object, we should *not* have
-        #   gotten any keyword arguments that map to the request.
-        has_flattened_params = any([model, prompt])
-        if request is not None and has_flattened_params:
-            raise ValueError(
-                "If the `request` argument is set, then none of "
-                "the individual field arguments should be set."
-            )
-
-        # - Use the request object if provided (there's no risk of modifying the input as
-        #   there are no flattened fields), or create one.
-        if not isinstance(request, text_service.CountTextTokensRequest):
-            request = text_service.CountTextTokensRequest(request)
-
-        # If we have keyword arguments corresponding to fields on the
-        # request, apply these.
-        if model is not None:
-            request.model = model
-        if prompt is not None:
-            request.prompt = prompt
-
-        # Wrap the RPC method; this adds retry and timeout information,
-        # and friendly error handling.
-        rpc = self._client._transport._wrapped_methods[
-            self._client._transport.count_text_tokens
         ]
 
         # Certain fields should be provided within the metadata header;

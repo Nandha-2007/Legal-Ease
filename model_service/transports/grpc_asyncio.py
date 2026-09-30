@@ -21,21 +21,17 @@ from typing import Awaitable, Callable, Dict, Optional, Sequence, Tuple, Union
 import warnings
 
 from google.api_core import exceptions as core_exceptions
-from google.api_core import gapic_v1, grpc_helpers_async, operations_v1
+from google.api_core import gapic_v1, grpc_helpers_async
 from google.api_core import retry_async as retries
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.auth.transport.grpc import SslCredentials  # type: ignore
-from google.longrunning import operations_pb2  # type: ignore
-from google.protobuf import empty_pb2  # type: ignore
 from google.protobuf.json_format import MessageToJson
 import google.protobuf.message
 import grpc  # type: ignore
 from grpc.experimental import aio  # type: ignore
 import proto  # type: ignore
 
-from google.ai.generativelanguage_v1beta3.types import tuned_model as gag_tuned_model
-from google.ai.generativelanguage_v1beta3.types import model, model_service
-from google.ai.generativelanguage_v1beta3.types import tuned_model
+from google.ai.generativelanguage_v1beta2.types import model, model_service
 
 from .base import DEFAULT_CLIENT_INFO, ModelServiceTransport
 from .grpc import ModelServiceGrpcTransport
@@ -78,7 +74,7 @@ class _LoggingClientAIOInterceptor(
             _LOGGER.debug(
                 f"Sending request for {client_call_details.method}",
                 extra={
-                    "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
+                    "serviceName": "google.ai.generativelanguage.v1beta2.ModelService",
                     "rpcName": str(client_call_details.method),
                     "request": grpc_request,
                     "metadata": grpc_request["metadata"],
@@ -108,7 +104,7 @@ class _LoggingClientAIOInterceptor(
             _LOGGER.debug(
                 f"Received response to rpc {client_call_details.method}.",
                 extra={
-                    "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
+                    "serviceName": "google.ai.generativelanguage.v1beta2.ModelService",
                     "rpcName": str(client_call_details.method),
                     "response": grpc_response,
                     "metadata": grpc_response["metadata"],
@@ -248,7 +244,6 @@ class ModelServiceGrpcAsyncIOTransport(ModelServiceTransport):
         self._grpc_channel = None
         self._ssl_channel_credentials = ssl_channel_credentials
         self._stubs: Dict[str, Callable] = {}
-        self._operations_client: Optional[operations_v1.OperationsAsyncClient] = None
 
         if api_mtls_endpoint:
             warnings.warn("api_mtls_endpoint is deprecated", DeprecationWarning)
@@ -334,22 +329,6 @@ class ModelServiceGrpcAsyncIOTransport(ModelServiceTransport):
         return self._grpc_channel
 
     @property
-    def operations_client(self) -> operations_v1.OperationsAsyncClient:
-        """Create the client designed to process long-running operations.
-
-        This property caches on the instance; repeated calls return the same
-        client.
-        """
-        # Quick check: Only create a new client if we do not already have one.
-        if self._operations_client is None:
-            self._operations_client = operations_v1.OperationsAsyncClient(
-                self._logged_channel
-            )
-
-        # Return the client from cache.
-        return self._operations_client
-
-    @property
     def get_model(
         self,
     ) -> Callable[[model_service.GetModelRequest], Awaitable[model.Model]]:
@@ -369,7 +348,7 @@ class ModelServiceGrpcAsyncIOTransport(ModelServiceTransport):
         # to pass in the functions for each.
         if "get_model" not in self._stubs:
             self._stubs["get_model"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/GetModel",
+                "/google.ai.generativelanguage.v1beta2.ModelService/GetModel",
                 request_serializer=model_service.GetModelRequest.serialize,
                 response_deserializer=model.Model.deserialize,
             )
@@ -397,192 +376,41 @@ class ModelServiceGrpcAsyncIOTransport(ModelServiceTransport):
         # to pass in the functions for each.
         if "list_models" not in self._stubs:
             self._stubs["list_models"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/ListModels",
+                "/google.ai.generativelanguage.v1beta2.ModelService/ListModels",
                 request_serializer=model_service.ListModelsRequest.serialize,
                 response_deserializer=model_service.ListModelsResponse.deserialize,
             )
         return self._stubs["list_models"]
-
-    @property
-    def get_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.GetTunedModelRequest], Awaitable[tuned_model.TunedModel]
-    ]:
-        r"""Return a callable for the get tuned model method over gRPC.
-
-        Gets information about a specific TunedModel.
-
-        Returns:
-            Callable[[~.GetTunedModelRequest],
-                    Awaitable[~.TunedModel]]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "get_tuned_model" not in self._stubs:
-            self._stubs["get_tuned_model"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/GetTunedModel",
-                request_serializer=model_service.GetTunedModelRequest.serialize,
-                response_deserializer=tuned_model.TunedModel.deserialize,
-            )
-        return self._stubs["get_tuned_model"]
-
-    @property
-    def list_tuned_models(
-        self,
-    ) -> Callable[
-        [model_service.ListTunedModelsRequest],
-        Awaitable[model_service.ListTunedModelsResponse],
-    ]:
-        r"""Return a callable for the list tuned models method over gRPC.
-
-        Lists tuned models owned by the user.
-
-        Returns:
-            Callable[[~.ListTunedModelsRequest],
-                    Awaitable[~.ListTunedModelsResponse]]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "list_tuned_models" not in self._stubs:
-            self._stubs["list_tuned_models"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/ListTunedModels",
-                request_serializer=model_service.ListTunedModelsRequest.serialize,
-                response_deserializer=model_service.ListTunedModelsResponse.deserialize,
-            )
-        return self._stubs["list_tuned_models"]
-
-    @property
-    def create_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.CreateTunedModelRequest], Awaitable[operations_pb2.Operation]
-    ]:
-        r"""Return a callable for the create tuned model method over gRPC.
-
-        Creates a tuned model. Intermediate tuning progress (if any) is
-        accessed through the [google.longrunning.Operations] service.
-
-        Status and results can be accessed through the Operations
-        service. Example: GET
-        /v1/tunedModels/az2mb0bpw6i/operations/000-111-222
-
-        Returns:
-            Callable[[~.CreateTunedModelRequest],
-                    Awaitable[~.Operation]]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "create_tuned_model" not in self._stubs:
-            self._stubs["create_tuned_model"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/CreateTunedModel",
-                request_serializer=model_service.CreateTunedModelRequest.serialize,
-                response_deserializer=operations_pb2.Operation.FromString,
-            )
-        return self._stubs["create_tuned_model"]
-
-    @property
-    def update_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.UpdateTunedModelRequest], Awaitable[gag_tuned_model.TunedModel]
-    ]:
-        r"""Return a callable for the update tuned model method over gRPC.
-
-        Updates a tuned model.
-
-        Returns:
-            Callable[[~.UpdateTunedModelRequest],
-                    Awaitable[~.TunedModel]]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "update_tuned_model" not in self._stubs:
-            self._stubs["update_tuned_model"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/UpdateTunedModel",
-                request_serializer=model_service.UpdateTunedModelRequest.serialize,
-                response_deserializer=gag_tuned_model.TunedModel.deserialize,
-            )
-        return self._stubs["update_tuned_model"]
-
-    @property
-    def delete_tuned_model(
-        self,
-    ) -> Callable[[model_service.DeleteTunedModelRequest], Awaitable[empty_pb2.Empty]]:
-        r"""Return a callable for the delete tuned model method over gRPC.
-
-        Deletes a tuned model.
-
-        Returns:
-            Callable[[~.DeleteTunedModelRequest],
-                    Awaitable[~.Empty]]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "delete_tuned_model" not in self._stubs:
-            self._stubs["delete_tuned_model"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.ModelService/DeleteTunedModel",
-                request_serializer=model_service.DeleteTunedModelRequest.serialize,
-                response_deserializer=empty_pb2.Empty.FromString,
-            )
-        return self._stubs["delete_tuned_model"]
 
     def _prep_wrapped_messages(self, client_info):
         """Precompute the wrapped methods, overriding the base class method to use async wrappers."""
         self._wrapped_methods = {
             self.get_model: self._wrap_method(
                 self.get_model,
-                default_timeout=None,
+                default_retry=retries.AsyncRetry(
+                    initial=1.0,
+                    maximum=10.0,
+                    multiplier=1.3,
+                    predicate=retries.if_exception_type(
+                        core_exceptions.ServiceUnavailable,
+                    ),
+                    deadline=60.0,
+                ),
+                default_timeout=60.0,
                 client_info=client_info,
             ),
             self.list_models: self._wrap_method(
                 self.list_models,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.get_tuned_model: self._wrap_method(
-                self.get_tuned_model,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.list_tuned_models: self._wrap_method(
-                self.list_tuned_models,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.create_tuned_model: self._wrap_method(
-                self.create_tuned_model,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.update_tuned_model: self._wrap_method(
-                self.update_tuned_model,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.delete_tuned_model: self._wrap_method(
-                self.delete_tuned_model,
-                default_timeout=None,
+                default_retry=retries.AsyncRetry(
+                    initial=1.0,
+                    maximum=10.0,
+                    multiplier=1.3,
+                    predicate=retries.if_exception_type(
+                        core_exceptions.ServiceUnavailable,
+                    ),
+                    deadline=60.0,
+                ),
+                default_timeout=60.0,
                 client_info=client_info,
             ),
         }

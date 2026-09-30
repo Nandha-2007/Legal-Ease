@@ -18,13 +18,9 @@ import re
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 from google.api_core import gapic_v1, path_template
-from google.longrunning import operations_pb2  # type: ignore
-from google.protobuf import empty_pb2  # type: ignore
 from google.protobuf import json_format
 
-from google.ai.generativelanguage_v1beta3.types import tuned_model as gag_tuned_model
-from google.ai.generativelanguage_v1beta3.types import model, model_service
-from google.ai.generativelanguage_v1beta3.types import tuned_model
+from google.ai.generativelanguage_v1beta2.types import model, model_service
 
 from .base import DEFAULT_CLIENT_INFO, ModelServiceTransport
 
@@ -91,110 +87,6 @@ class _BaseModelServiceRestTransport(ModelServiceTransport):
             api_audience=api_audience,
         )
 
-    class _BaseCreateTunedModel:
-        def __hash__(self):  # pragma: NO COVER
-            return NotImplementedError("__hash__ must be implemented.")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {
-                k: v
-                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
-                if k not in message_dict
-            }
-
-        @staticmethod
-        def _get_http_options():
-            http_options: List[Dict[str, str]] = [
-                {
-                    "method": "post",
-                    "uri": "/v1beta3/tunedModels",
-                    "body": "tuned_model",
-                },
-            ]
-            return http_options
-
-        @staticmethod
-        def _get_transcoded_request(http_options, request):
-            pb_request = model_service.CreateTunedModelRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-            return transcoded_request
-
-        @staticmethod
-        def _get_request_body_json(transcoded_request):
-            # Jsonify the request body
-
-            body = json_format.MessageToJson(
-                transcoded_request["body"], use_integers_for_enums=True
-            )
-            return body
-
-        @staticmethod
-        def _get_query_params_json(transcoded_request):
-            query_params = json.loads(
-                json_format.MessageToJson(
-                    transcoded_request["query_params"],
-                    use_integers_for_enums=True,
-                )
-            )
-            query_params.update(
-                _BaseModelServiceRestTransport._BaseCreateTunedModel._get_unset_required_fields(
-                    query_params
-                )
-            )
-
-            query_params["$alt"] = "json;enum-encoding=int"
-            return query_params
-
-    class _BaseDeleteTunedModel:
-        def __hash__(self):  # pragma: NO COVER
-            return NotImplementedError("__hash__ must be implemented.")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {
-                k: v
-                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
-                if k not in message_dict
-            }
-
-        @staticmethod
-        def _get_http_options():
-            http_options: List[Dict[str, str]] = [
-                {
-                    "method": "delete",
-                    "uri": "/v1beta3/{name=tunedModels/*}",
-                },
-            ]
-            return http_options
-
-        @staticmethod
-        def _get_transcoded_request(http_options, request):
-            pb_request = model_service.DeleteTunedModelRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-            return transcoded_request
-
-        @staticmethod
-        def _get_query_params_json(transcoded_request):
-            query_params = json.loads(
-                json_format.MessageToJson(
-                    transcoded_request["query_params"],
-                    use_integers_for_enums=True,
-                )
-            )
-            query_params.update(
-                _BaseModelServiceRestTransport._BaseDeleteTunedModel._get_unset_required_fields(
-                    query_params
-                )
-            )
-
-            query_params["$alt"] = "json;enum-encoding=int"
-            return query_params
-
     class _BaseGetModel:
         def __hash__(self):  # pragma: NO COVER
             return NotImplementedError("__hash__ must be implemented.")
@@ -214,7 +106,7 @@ class _BaseModelServiceRestTransport(ModelServiceTransport):
             http_options: List[Dict[str, str]] = [
                 {
                     "method": "get",
-                    "uri": "/v1beta3/{name=models/*}",
+                    "uri": "/v1beta2/{name=models/*}",
                 },
             ]
             return http_options
@@ -242,53 +134,6 @@ class _BaseModelServiceRestTransport(ModelServiceTransport):
             query_params["$alt"] = "json;enum-encoding=int"
             return query_params
 
-    class _BaseGetTunedModel:
-        def __hash__(self):  # pragma: NO COVER
-            return NotImplementedError("__hash__ must be implemented.")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {
-                k: v
-                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
-                if k not in message_dict
-            }
-
-        @staticmethod
-        def _get_http_options():
-            http_options: List[Dict[str, str]] = [
-                {
-                    "method": "get",
-                    "uri": "/v1beta3/{name=tunedModels/*}",
-                },
-            ]
-            return http_options
-
-        @staticmethod
-        def _get_transcoded_request(http_options, request):
-            pb_request = model_service.GetTunedModelRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-            return transcoded_request
-
-        @staticmethod
-        def _get_query_params_json(transcoded_request):
-            query_params = json.loads(
-                json_format.MessageToJson(
-                    transcoded_request["query_params"],
-                    use_integers_for_enums=True,
-                )
-            )
-            query_params.update(
-                _BaseModelServiceRestTransport._BaseGetTunedModel._get_unset_required_fields(
-                    query_params
-                )
-            )
-
-            query_params["$alt"] = "json;enum-encoding=int"
-            return query_params
-
     class _BaseListModels:
         def __hash__(self):  # pragma: NO COVER
             return NotImplementedError("__hash__ must be implemented.")
@@ -298,7 +143,7 @@ class _BaseModelServiceRestTransport(ModelServiceTransport):
             http_options: List[Dict[str, str]] = [
                 {
                     "method": "get",
-                    "uri": "/v1beta3/models",
+                    "uri": "/v1beta2/models",
                 },
             ]
             return http_options
@@ -315,97 +160,6 @@ class _BaseModelServiceRestTransport(ModelServiceTransport):
                 json_format.MessageToJson(
                     transcoded_request["query_params"],
                     use_integers_for_enums=True,
-                )
-            )
-
-            query_params["$alt"] = "json;enum-encoding=int"
-            return query_params
-
-    class _BaseListTunedModels:
-        def __hash__(self):  # pragma: NO COVER
-            return NotImplementedError("__hash__ must be implemented.")
-
-        @staticmethod
-        def _get_http_options():
-            http_options: List[Dict[str, str]] = [
-                {
-                    "method": "get",
-                    "uri": "/v1beta3/tunedModels",
-                },
-            ]
-            return http_options
-
-        @staticmethod
-        def _get_transcoded_request(http_options, request):
-            pb_request = model_service.ListTunedModelsRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-            return transcoded_request
-
-        @staticmethod
-        def _get_query_params_json(transcoded_request):
-            query_params = json.loads(
-                json_format.MessageToJson(
-                    transcoded_request["query_params"],
-                    use_integers_for_enums=True,
-                )
-            )
-
-            query_params["$alt"] = "json;enum-encoding=int"
-            return query_params
-
-    class _BaseUpdateTunedModel:
-        def __hash__(self):  # pragma: NO COVER
-            return NotImplementedError("__hash__ must be implemented.")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {
-            "updateMask": {},
-        }
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {
-                k: v
-                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
-                if k not in message_dict
-            }
-
-        @staticmethod
-        def _get_http_options():
-            http_options: List[Dict[str, str]] = [
-                {
-                    "method": "patch",
-                    "uri": "/v1beta3/{tuned_model.name=tunedModels/*}",
-                    "body": "tuned_model",
-                },
-            ]
-            return http_options
-
-        @staticmethod
-        def _get_transcoded_request(http_options, request):
-            pb_request = model_service.UpdateTunedModelRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-            return transcoded_request
-
-        @staticmethod
-        def _get_request_body_json(transcoded_request):
-            # Jsonify the request body
-
-            body = json_format.MessageToJson(
-                transcoded_request["body"], use_integers_for_enums=True
-            )
-            return body
-
-        @staticmethod
-        def _get_query_params_json(transcoded_request):
-            query_params = json.loads(
-                json_format.MessageToJson(
-                    transcoded_request["query_params"],
-                    use_integers_for_enums=True,
-                )
-            )
-            query_params.update(
-                _BaseModelServiceRestTransport._BaseUpdateTunedModel._get_unset_required_fields(
-                    query_params
                 )
             )
 

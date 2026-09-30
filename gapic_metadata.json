@@ -1,8 +1,8 @@
  {
   "comment": "This file maps proto services/RPCs to the corresponding library clients/methods",
   "language": "python",
-  "libraryPackage": "google.ai.generativelanguage_v1beta3",
-  "protoPackage": "google.ai.generativelanguage.v1beta3",
+  "libraryPackage": "google.ai.generativelanguage_v1beta2",
+  "protoPackage": "google.ai.generativelanguage.v1beta2",
   "schema": "1.0",
   "services": {
     "DiscussService": {
@@ -59,39 +59,14 @@
         "grpc": {
           "libraryClient": "ModelServiceClient",
           "rpcs": {
-            "CreateTunedModel": {
-              "methods": [
-                "create_tuned_model"
-              ]
-            },
-            "DeleteTunedModel": {
-              "methods": [
-                "delete_tuned_model"
-              ]
-            },
             "GetModel": {
               "methods": [
                 "get_model"
               ]
             },
-            "GetTunedModel": {
-              "methods": [
-                "get_tuned_model"
-              ]
-            },
             "ListModels": {
               "methods": [
                 "list_models"
-              ]
-            },
-            "ListTunedModels": {
-              "methods": [
-                "list_tuned_models"
-              ]
-            },
-            "UpdateTunedModel": {
-              "methods": [
-                "update_tuned_model"
               ]
             }
           }
@@ -99,39 +74,14 @@
         "grpc-async": {
           "libraryClient": "ModelServiceAsyncClient",
           "rpcs": {
-            "CreateTunedModel": {
-              "methods": [
-                "create_tuned_model"
-              ]
-            },
-            "DeleteTunedModel": {
-              "methods": [
-                "delete_tuned_model"
-              ]
-            },
             "GetModel": {
               "methods": [
                 "get_model"
               ]
             },
-            "GetTunedModel": {
-              "methods": [
-                "get_tuned_model"
-              ]
-            },
             "ListModels": {
               "methods": [
                 "list_models"
-              ]
-            },
-            "ListTunedModels": {
-              "methods": [
-                "list_tuned_models"
-              ]
-            },
-            "UpdateTunedModel": {
-              "methods": [
-                "update_tuned_model"
               ]
             }
           }
@@ -139,148 +89,14 @@
         "rest": {
           "libraryClient": "ModelServiceClient",
           "rpcs": {
-            "CreateTunedModel": {
-              "methods": [
-                "create_tuned_model"
-              ]
-            },
-            "DeleteTunedModel": {
-              "methods": [
-                "delete_tuned_model"
-              ]
-            },
             "GetModel": {
               "methods": [
                 "get_model"
               ]
             },
-            "GetTunedModel": {
-              "methods": [
-                "get_tuned_model"
-              ]
-            },
             "ListModels": {
               "methods": [
                 "list_models"
-              ]
-            },
-            "ListTunedModels": {
-              "methods": [
-                "list_tuned_models"
-              ]
-            },
-            "UpdateTunedModel": {
-              "methods": [
-                "update_tuned_model"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "PermissionService": {
-      "clients": {
-        "grpc": {
-          "libraryClient": "PermissionServiceClient",
-          "rpcs": {
-            "CreatePermission": {
-              "methods": [
-                "create_permission"
-              ]
-            },
-            "DeletePermission": {
-              "methods": [
-                "delete_permission"
-              ]
-            },
-            "GetPermission": {
-              "methods": [
-                "get_permission"
-              ]
-            },
-            "ListPermissions": {
-              "methods": [
-                "list_permissions"
-              ]
-            },
-            "TransferOwnership": {
-              "methods": [
-                "transfer_ownership"
-              ]
-            },
-            "UpdatePermission": {
-              "methods": [
-                "update_permission"
-              ]
-            }
-          }
-        },
-        "grpc-async": {
-          "libraryClient": "PermissionServiceAsyncClient",
-          "rpcs": {
-            "CreatePermission": {
-              "methods": [
-                "create_permission"
-              ]
-            },
-            "DeletePermission": {
-              "methods": [
-                "delete_permission"
-              ]
-            },
-            "GetPermission": {
-              "methods": [
-                "get_permission"
-              ]
-            },
-            "ListPermissions": {
-              "methods": [
-                "list_permissions"
-              ]
-            },
-            "TransferOwnership": {
-              "methods": [
-                "transfer_ownership"
-              ]
-            },
-            "UpdatePermission": {
-              "methods": [
-                "update_permission"
-              ]
-            }
-          }
-        },
-        "rest": {
-          "libraryClient": "PermissionServiceClient",
-          "rpcs": {
-            "CreatePermission": {
-              "methods": [
-                "create_permission"
-              ]
-            },
-            "DeletePermission": {
-              "methods": [
-                "delete_permission"
-              ]
-            },
-            "GetPermission": {
-              "methods": [
-                "get_permission"
-              ]
-            },
-            "ListPermissions": {
-              "methods": [
-                "list_permissions"
-              ]
-            },
-            "TransferOwnership": {
-              "methods": [
-                "transfer_ownership"
-              ]
-            },
-            "UpdatePermission": {
-              "methods": [
-                "update_permission"
               ]
             }
           }
@@ -292,16 +108,6 @@
         "grpc": {
           "libraryClient": "TextServiceClient",
           "rpcs": {
-            "BatchEmbedText": {
-              "methods": [
-                "batch_embed_text"
-              ]
-            },
-            "CountTextTokens": {
-              "methods": [
-                "count_text_tokens"
-              ]
-            },
             "EmbedText": {
               "methods": [
                 "embed_text"
@@ -317,16 +123,6 @@
         "grpc-async": {
           "libraryClient": "TextServiceAsyncClient",
           "rpcs": {
-            "BatchEmbedText": {
-              "methods": [
-                "batch_embed_text"
-              ]
-            },
-            "CountTextTokens": {
-              "methods": [
-                "count_text_tokens"
-              ]
-            },
             "EmbedText": {
               "methods": [
                 "embed_text"
@@ -342,16 +138,6 @@
         "rest": {
           "libraryClient": "TextServiceClient",
           "rpcs": {
-            "BatchEmbedText": {
-              "methods": [
-                "batch_embed_text"
-              ]
-            },
-            "CountTextTokens": {
-              "methods": [
-                "count_text_tokens"
-              ]
-            },
             "EmbedText": {
               "methods": [
                 "embed_text"

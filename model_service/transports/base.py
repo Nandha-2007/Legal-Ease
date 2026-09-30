@@ -18,18 +18,14 @@ from typing import Awaitable, Callable, Dict, Optional, Sequence, Union
 
 import google.api_core
 from google.api_core import exceptions as core_exceptions
-from google.api_core import gapic_v1, operations_v1
+from google.api_core import gapic_v1
 from google.api_core import retry as retries
 import google.auth  # type: ignore
 from google.auth import credentials as ga_credentials  # type: ignore
-from google.longrunning import operations_pb2  # type: ignore
 from google.oauth2 import service_account  # type: ignore
-from google.protobuf import empty_pb2  # type: ignore
 
-from google.ai.generativelanguage_v1beta3 import gapic_version as package_version
-from google.ai.generativelanguage_v1beta3.types import tuned_model as gag_tuned_model
-from google.ai.generativelanguage_v1beta3.types import model, model_service
-from google.ai.generativelanguage_v1beta3.types import tuned_model
+from google.ai.generativelanguage_v1beta2 import gapic_version as package_version
+from google.ai.generativelanguage_v1beta2.types import model, model_service
 
 DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
     gapic_version=package_version.__version__
@@ -134,37 +130,30 @@ class ModelServiceTransport(abc.ABC):
         self._wrapped_methods = {
             self.get_model: gapic_v1.method.wrap_method(
                 self.get_model,
-                default_timeout=None,
+                default_retry=retries.Retry(
+                    initial=1.0,
+                    maximum=10.0,
+                    multiplier=1.3,
+                    predicate=retries.if_exception_type(
+                        core_exceptions.ServiceUnavailable,
+                    ),
+                    deadline=60.0,
+                ),
+                default_timeout=60.0,
                 client_info=client_info,
             ),
             self.list_models: gapic_v1.method.wrap_method(
                 self.list_models,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.get_tuned_model: gapic_v1.method.wrap_method(
-                self.get_tuned_model,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.list_tuned_models: gapic_v1.method.wrap_method(
-                self.list_tuned_models,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.create_tuned_model: gapic_v1.method.wrap_method(
-                self.create_tuned_model,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.update_tuned_model: gapic_v1.method.wrap_method(
-                self.update_tuned_model,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.delete_tuned_model: gapic_v1.method.wrap_method(
-                self.delete_tuned_model,
-                default_timeout=None,
+                default_retry=retries.Retry(
+                    initial=1.0,
+                    maximum=10.0,
+                    multiplier=1.3,
+                    predicate=retries.if_exception_type(
+                        core_exceptions.ServiceUnavailable,
+                    ),
+                    deadline=60.0,
+                ),
+                default_timeout=60.0,
                 client_info=client_info,
             ),
         }
@@ -176,11 +165,6 @@ class ModelServiceTransport(abc.ABC):
              Only call this method if the transport is NOT shared
              with other clients - this may cause errors in other clients!
         """
-        raise NotImplementedError()
-
-    @property
-    def operations_client(self):
-        """Return the client designed to process long-running operations."""
         raise NotImplementedError()
 
     @property
@@ -200,54 +184,6 @@ class ModelServiceTransport(abc.ABC):
             model_service.ListModelsResponse,
             Awaitable[model_service.ListModelsResponse],
         ],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def get_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.GetTunedModelRequest],
-        Union[tuned_model.TunedModel, Awaitable[tuned_model.TunedModel]],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def list_tuned_models(
-        self,
-    ) -> Callable[
-        [model_service.ListTunedModelsRequest],
-        Union[
-            model_service.ListTunedModelsResponse,
-            Awaitable[model_service.ListTunedModelsResponse],
-        ],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def create_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.CreateTunedModelRequest],
-        Union[operations_pb2.Operation, Awaitable[operations_pb2.Operation]],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def update_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.UpdateTunedModelRequest],
-        Union[gag_tuned_model.TunedModel, Awaitable[gag_tuned_model.TunedModel]],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def delete_tuned_model(
-        self,
-    ) -> Callable[
-        [model_service.DeleteTunedModelRequest],
-        Union[empty_pb2.Empty, Awaitable[empty_pb2.Empty]],
     ]:
         raise NotImplementedError()
 

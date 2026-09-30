@@ -22,11 +22,10 @@ from google.api_core import gapic_v1
 from google.api_core import retry as retries
 import google.auth  # type: ignore
 from google.auth import credentials as ga_credentials  # type: ignore
-from google.longrunning import operations_pb2  # type: ignore
 from google.oauth2 import service_account  # type: ignore
 
-from google.ai.generativelanguage_v1beta3 import gapic_version as package_version
-from google.ai.generativelanguage_v1beta3.types import text_service
+from google.ai.generativelanguage_v1beta2 import gapic_version as package_version
+from google.ai.generativelanguage_v1beta2.types import text_service
 
 DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
     gapic_version=package_version.__version__
@@ -131,22 +130,30 @@ class TextServiceTransport(abc.ABC):
         self._wrapped_methods = {
             self.generate_text: gapic_v1.method.wrap_method(
                 self.generate_text,
-                default_timeout=None,
+                default_retry=retries.Retry(
+                    initial=1.0,
+                    maximum=10.0,
+                    multiplier=1.3,
+                    predicate=retries.if_exception_type(
+                        core_exceptions.ServiceUnavailable,
+                    ),
+                    deadline=60.0,
+                ),
+                default_timeout=60.0,
                 client_info=client_info,
             ),
             self.embed_text: gapic_v1.method.wrap_method(
                 self.embed_text,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.batch_embed_text: gapic_v1.method.wrap_method(
-                self.batch_embed_text,
-                default_timeout=None,
-                client_info=client_info,
-            ),
-            self.count_text_tokens: gapic_v1.method.wrap_method(
-                self.count_text_tokens,
-                default_timeout=None,
+                default_retry=retries.Retry(
+                    initial=1.0,
+                    maximum=10.0,
+                    multiplier=1.3,
+                    predicate=retries.if_exception_type(
+                        core_exceptions.ServiceUnavailable,
+                    ),
+                    deadline=60.0,
+                ),
+                default_timeout=60.0,
                 client_info=client_info,
             ),
         }
@@ -179,30 +186,6 @@ class TextServiceTransport(abc.ABC):
         [text_service.EmbedTextRequest],
         Union[
             text_service.EmbedTextResponse, Awaitable[text_service.EmbedTextResponse]
-        ],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def batch_embed_text(
-        self,
-    ) -> Callable[
-        [text_service.BatchEmbedTextRequest],
-        Union[
-            text_service.BatchEmbedTextResponse,
-            Awaitable[text_service.BatchEmbedTextResponse],
-        ],
-    ]:
-        raise NotImplementedError()
-
-    @property
-    def count_text_tokens(
-        self,
-    ) -> Callable[
-        [text_service.CountTextTokensRequest],
-        Union[
-            text_service.CountTextTokensResponse,
-            Awaitable[text_service.CountTextTokensResponse],
         ],
     ]:
         raise NotImplementedError()

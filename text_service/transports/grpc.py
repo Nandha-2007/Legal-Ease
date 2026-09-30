@@ -23,13 +23,12 @@ from google.api_core import gapic_v1, grpc_helpers
 import google.auth  # type: ignore
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.auth.transport.grpc import SslCredentials  # type: ignore
-from google.longrunning import operations_pb2  # type: ignore
 from google.protobuf.json_format import MessageToJson
 import google.protobuf.message
 import grpc  # type: ignore
 import proto  # type: ignore
 
-from google.ai.generativelanguage_v1beta3.types import text_service
+from google.ai.generativelanguage_v1beta2.types import text_service
 
 from .base import DEFAULT_CLIENT_INFO, TextServiceTransport
 
@@ -69,7 +68,7 @@ class _LoggingClientInterceptor(grpc.UnaryUnaryClientInterceptor):  # pragma: NO
             _LOGGER.debug(
                 f"Sending request for {client_call_details.method}",
                 extra={
-                    "serviceName": "google.ai.generativelanguage.v1beta3.TextService",
+                    "serviceName": "google.ai.generativelanguage.v1beta2.TextService",
                     "rpcName": client_call_details.method,
                     "request": grpc_request,
                     "metadata": grpc_request["metadata"],
@@ -100,7 +99,7 @@ class _LoggingClientInterceptor(grpc.UnaryUnaryClientInterceptor):  # pragma: NO
             _LOGGER.debug(
                 f"Received response for {client_call_details.method}.",
                 extra={
-                    "serviceName": "google.ai.generativelanguage.v1beta3.TextService",
+                    "serviceName": "google.ai.generativelanguage.v1beta2.TextService",
                     "rpcName": client_call_details.method,
                     "response": grpc_response,
                     "metadata": grpc_response["metadata"],
@@ -347,7 +346,7 @@ class TextServiceGrpcTransport(TextServiceTransport):
         # to pass in the functions for each.
         if "generate_text" not in self._stubs:
             self._stubs["generate_text"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.TextService/GenerateText",
+                "/google.ai.generativelanguage.v1beta2.TextService/GenerateText",
                 request_serializer=text_service.GenerateTextRequest.serialize,
                 response_deserializer=text_service.GenerateTextResponse.deserialize,
             )
@@ -374,69 +373,11 @@ class TextServiceGrpcTransport(TextServiceTransport):
         # to pass in the functions for each.
         if "embed_text" not in self._stubs:
             self._stubs["embed_text"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.TextService/EmbedText",
+                "/google.ai.generativelanguage.v1beta2.TextService/EmbedText",
                 request_serializer=text_service.EmbedTextRequest.serialize,
                 response_deserializer=text_service.EmbedTextResponse.deserialize,
             )
         return self._stubs["embed_text"]
-
-    @property
-    def batch_embed_text(
-        self,
-    ) -> Callable[
-        [text_service.BatchEmbedTextRequest], text_service.BatchEmbedTextResponse
-    ]:
-        r"""Return a callable for the batch embed text method over gRPC.
-
-        Generates multiple embeddings from the model given
-        input text in a synchronous call.
-
-        Returns:
-            Callable[[~.BatchEmbedTextRequest],
-                    ~.BatchEmbedTextResponse]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "batch_embed_text" not in self._stubs:
-            self._stubs["batch_embed_text"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.TextService/BatchEmbedText",
-                request_serializer=text_service.BatchEmbedTextRequest.serialize,
-                response_deserializer=text_service.BatchEmbedTextResponse.deserialize,
-            )
-        return self._stubs["batch_embed_text"]
-
-    @property
-    def count_text_tokens(
-        self,
-    ) -> Callable[
-        [text_service.CountTextTokensRequest], text_service.CountTextTokensResponse
-    ]:
-        r"""Return a callable for the count text tokens method over gRPC.
-
-        Runs a model's tokenizer on a text and returns the
-        token count.
-
-        Returns:
-            Callable[[~.CountTextTokensRequest],
-                    ~.CountTextTokensResponse]:
-                A function that, when called, will call the underlying RPC
-                on the server.
-        """
-        # Generate a "stub function" on-the-fly which will actually make
-        # the request.
-        # gRPC handles serialization and deserialization, so we just need
-        # to pass in the functions for each.
-        if "count_text_tokens" not in self._stubs:
-            self._stubs["count_text_tokens"] = self._logged_channel.unary_unary(
-                "/google.ai.generativelanguage.v1beta3.TextService/CountTextTokens",
-                request_serializer=text_service.CountTextTokensRequest.serialize,
-                response_deserializer=text_service.CountTextTokensResponse.deserialize,
-            )
-        return self._stubs["count_text_tokens"]
 
     def close(self):
         self._logged_channel.close()

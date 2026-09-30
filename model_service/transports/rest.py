@@ -19,19 +19,15 @@ import logging
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 import warnings
 
-from google.api_core import gapic_v1, operations_v1, rest_helpers, rest_streaming
 from google.api_core import exceptions as core_exceptions
+from google.api_core import gapic_v1, rest_helpers, rest_streaming
 from google.api_core import retry as retries
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.auth.transport.requests import AuthorizedSession  # type: ignore
-from google.longrunning import operations_pb2  # type: ignore
-from google.protobuf import empty_pb2  # type: ignore
 from google.protobuf import json_format
 from requests import __version__ as requests_version
 
-from google.ai.generativelanguage_v1beta3.types import tuned_model as gag_tuned_model
-from google.ai.generativelanguage_v1beta3.types import model, model_service
-from google.ai.generativelanguage_v1beta3.types import tuned_model
+from google.ai.generativelanguage_v1beta2.types import model, model_service
 
 from .base import DEFAULT_CLIENT_INFO as BASE_DEFAULT_CLIENT_INFO
 from .rest_base import _BaseModelServiceRestTransport
@@ -72,31 +68,11 @@ class ModelServiceRestInterceptor:
 
     .. code-block:: python
         class MyCustomModelServiceInterceptor(ModelServiceRestInterceptor):
-            def pre_create_tuned_model(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_create_tuned_model(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
-            def pre_delete_tuned_model(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
             def pre_get_model(self, request, metadata):
                 logging.log(f"Received request: {request}")
                 return request, metadata
 
             def post_get_model(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
-            def pre_get_tuned_model(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_get_tuned_model(self, response):
                 logging.log(f"Received response: {response}")
                 return response
 
@@ -108,66 +84,11 @@ class ModelServiceRestInterceptor:
                 logging.log(f"Received response: {response}")
                 return response
 
-            def pre_list_tuned_models(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_list_tuned_models(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
-            def pre_update_tuned_model(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_update_tuned_model(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
         transport = ModelServiceRestTransport(interceptor=MyCustomModelServiceInterceptor())
         client = ModelServiceClient(transport=transport)
 
 
     """
-
-    def pre_create_tuned_model(
-        self,
-        request: model_service.CreateTunedModelRequest,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]],
-    ) -> Tuple[
-        model_service.CreateTunedModelRequest, Sequence[Tuple[str, Union[str, bytes]]]
-    ]:
-        """Pre-rpc interceptor for create_tuned_model
-
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the ModelService server.
-        """
-        return request, metadata
-
-    def post_create_tuned_model(
-        self, response: operations_pb2.Operation
-    ) -> operations_pb2.Operation:
-        """Post-rpc interceptor for create_tuned_model
-
-        Override in a subclass to manipulate the response
-        after it is returned by the ModelService server but before
-        it is returned to user code.
-        """
-        return response
-
-    def pre_delete_tuned_model(
-        self,
-        request: model_service.DeleteTunedModelRequest,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]],
-    ) -> Tuple[
-        model_service.DeleteTunedModelRequest, Sequence[Tuple[str, Union[str, bytes]]]
-    ]:
-        """Pre-rpc interceptor for delete_tuned_model
-
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the ModelService server.
-        """
-        return request, metadata
 
     def pre_get_model(
         self,
@@ -183,31 +104,6 @@ class ModelServiceRestInterceptor:
 
     def post_get_model(self, response: model.Model) -> model.Model:
         """Post-rpc interceptor for get_model
-
-        Override in a subclass to manipulate the response
-        after it is returned by the ModelService server but before
-        it is returned to user code.
-        """
-        return response
-
-    def pre_get_tuned_model(
-        self,
-        request: model_service.GetTunedModelRequest,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]],
-    ) -> Tuple[
-        model_service.GetTunedModelRequest, Sequence[Tuple[str, Union[str, bytes]]]
-    ]:
-        """Pre-rpc interceptor for get_tuned_model
-
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the ModelService server.
-        """
-        return request, metadata
-
-    def post_get_tuned_model(
-        self, response: tuned_model.TunedModel
-    ) -> tuned_model.TunedModel:
-        """Post-rpc interceptor for get_tuned_model
 
         Override in a subclass to manipulate the response
         after it is returned by the ModelService server but before
@@ -233,56 +129,6 @@ class ModelServiceRestInterceptor:
         self, response: model_service.ListModelsResponse
     ) -> model_service.ListModelsResponse:
         """Post-rpc interceptor for list_models
-
-        Override in a subclass to manipulate the response
-        after it is returned by the ModelService server but before
-        it is returned to user code.
-        """
-        return response
-
-    def pre_list_tuned_models(
-        self,
-        request: model_service.ListTunedModelsRequest,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]],
-    ) -> Tuple[
-        model_service.ListTunedModelsRequest, Sequence[Tuple[str, Union[str, bytes]]]
-    ]:
-        """Pre-rpc interceptor for list_tuned_models
-
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the ModelService server.
-        """
-        return request, metadata
-
-    def post_list_tuned_models(
-        self, response: model_service.ListTunedModelsResponse
-    ) -> model_service.ListTunedModelsResponse:
-        """Post-rpc interceptor for list_tuned_models
-
-        Override in a subclass to manipulate the response
-        after it is returned by the ModelService server but before
-        it is returned to user code.
-        """
-        return response
-
-    def pre_update_tuned_model(
-        self,
-        request: model_service.UpdateTunedModelRequest,
-        metadata: Sequence[Tuple[str, Union[str, bytes]]],
-    ) -> Tuple[
-        model_service.UpdateTunedModelRequest, Sequence[Tuple[str, Union[str, bytes]]]
-    ]:
-        """Pre-rpc interceptor for update_tuned_model
-
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the ModelService server.
-        """
-        return request, metadata
-
-    def post_update_tuned_model(
-        self, response: gag_tuned_model.TunedModel
-    ) -> gag_tuned_model.TunedModel:
-        """Post-rpc interceptor for update_tuned_model
 
         Override in a subclass to manipulate the response
         after it is returned by the ModelService server but before
@@ -373,295 +219,10 @@ class ModelServiceRestTransport(_BaseModelServiceRestTransport):
         self._session = AuthorizedSession(
             self._credentials, default_host=self.DEFAULT_HOST
         )
-        self._operations_client: Optional[operations_v1.AbstractOperationsClient] = None
         if client_cert_source_for_mtls:
             self._session.configure_mtls_channel(client_cert_source_for_mtls)
         self._interceptor = interceptor or ModelServiceRestInterceptor()
         self._prep_wrapped_messages(client_info)
-
-    @property
-    def operations_client(self) -> operations_v1.AbstractOperationsClient:
-        """Create the client designed to process long-running operations.
-
-        This property caches on the instance; repeated calls return the same
-        client.
-        """
-        # Only create a new client if we do not already have one.
-        if self._operations_client is None:
-            http_options: Dict[str, List[Dict[str, str]]] = {}
-
-            rest_transport = operations_v1.OperationsRestTransport(
-                host=self._host,
-                # use the credentials which are saved
-                credentials=self._credentials,
-                scopes=self._scopes,
-                http_options=http_options,
-                path_prefix="v1beta3",
-            )
-
-            self._operations_client = operations_v1.AbstractOperationsClient(
-                transport=rest_transport
-            )
-
-        # Return the client from cache.
-        return self._operations_client
-
-    class _CreateTunedModel(
-        _BaseModelServiceRestTransport._BaseCreateTunedModel, ModelServiceRestStub
-    ):
-        def __hash__(self):
-            return hash("ModelServiceRestTransport.CreateTunedModel")
-
-        @staticmethod
-        def _get_response(
-            host,
-            metadata,
-            query_params,
-            session,
-            timeout,
-            transcoded_request,
-            body=None,
-        ):
-            uri = transcoded_request["uri"]
-            method = transcoded_request["method"]
-            headers = dict(metadata)
-            headers["Content-Type"] = "application/json"
-            response = getattr(session, method)(
-                "{host}{uri}".format(host=host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-                data=body,
-            )
-            return response
-
-        def __call__(
-            self,
-            request: model_service.CreateTunedModelRequest,
-            *,
-            retry: OptionalRetry = gapic_v1.method.DEFAULT,
-            timeout: Optional[float] = None,
-            metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-        ) -> operations_pb2.Operation:
-            r"""Call the create tuned model method over HTTP.
-
-            Args:
-                request (~.model_service.CreateTunedModelRequest):
-                    The request object. Request to create a TunedModel.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                    sent along with the request as metadata. Normally, each value must be of type `str`,
-                    but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                    be of type `bytes`.
-
-            Returns:
-                ~.operations_pb2.Operation:
-                    This resource represents a
-                long-running operation that is the
-                result of a network API call.
-
-            """
-
-            http_options = (
-                _BaseModelServiceRestTransport._BaseCreateTunedModel._get_http_options()
-            )
-
-            request, metadata = self._interceptor.pre_create_tuned_model(
-                request, metadata
-            )
-            transcoded_request = _BaseModelServiceRestTransport._BaseCreateTunedModel._get_transcoded_request(
-                http_options, request
-            )
-
-            body = _BaseModelServiceRestTransport._BaseCreateTunedModel._get_request_body_json(
-                transcoded_request
-            )
-
-            # Jsonify the query params
-            query_params = _BaseModelServiceRestTransport._BaseCreateTunedModel._get_query_params_json(
-                transcoded_request
-            )
-
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                request_url = "{host}{uri}".format(
-                    host=self._host, uri=transcoded_request["uri"]
-                )
-                method = transcoded_request["method"]
-                try:
-                    request_payload = json_format.MessageToJson(request)
-                except:
-                    request_payload = None
-                http_request = {
-                    "payload": request_payload,
-                    "requestMethod": method,
-                    "requestUrl": request_url,
-                    "headers": dict(metadata),
-                }
-                _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.CreateTunedModel",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "CreateTunedModel",
-                        "httpRequest": http_request,
-                        "metadata": http_request["headers"],
-                    },
-                )
-
-            # Send the request
-            response = ModelServiceRestTransport._CreateTunedModel._get_response(
-                self._host,
-                metadata,
-                query_params,
-                self._session,
-                timeout,
-                transcoded_request,
-                body,
-            )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = operations_pb2.Operation()
-            json_format.Parse(response.content, resp, ignore_unknown_fields=True)
-
-            resp = self._interceptor.post_create_tuned_model(resp)
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                try:
-                    response_payload = json_format.MessageToJson(resp)
-                except:
-                    response_payload = None
-                http_response = {
-                    "payload": response_payload,
-                    "headers": dict(response.headers),
-                    "status": response.status_code,
-                }
-                _LOGGER.debug(
-                    "Received response for google.ai.generativelanguage_v1beta3.ModelServiceClient.create_tuned_model",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "CreateTunedModel",
-                        "metadata": http_response["headers"],
-                        "httpResponse": http_response,
-                    },
-                )
-            return resp
-
-    class _DeleteTunedModel(
-        _BaseModelServiceRestTransport._BaseDeleteTunedModel, ModelServiceRestStub
-    ):
-        def __hash__(self):
-            return hash("ModelServiceRestTransport.DeleteTunedModel")
-
-        @staticmethod
-        def _get_response(
-            host,
-            metadata,
-            query_params,
-            session,
-            timeout,
-            transcoded_request,
-            body=None,
-        ):
-            uri = transcoded_request["uri"]
-            method = transcoded_request["method"]
-            headers = dict(metadata)
-            headers["Content-Type"] = "application/json"
-            response = getattr(session, method)(
-                "{host}{uri}".format(host=host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-            )
-            return response
-
-        def __call__(
-            self,
-            request: model_service.DeleteTunedModelRequest,
-            *,
-            retry: OptionalRetry = gapic_v1.method.DEFAULT,
-            timeout: Optional[float] = None,
-            metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-        ):
-            r"""Call the delete tuned model method over HTTP.
-
-            Args:
-                request (~.model_service.DeleteTunedModelRequest):
-                    The request object. Request to delete a TunedModel.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                    sent along with the request as metadata. Normally, each value must be of type `str`,
-                    but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                    be of type `bytes`.
-            """
-
-            http_options = (
-                _BaseModelServiceRestTransport._BaseDeleteTunedModel._get_http_options()
-            )
-
-            request, metadata = self._interceptor.pre_delete_tuned_model(
-                request, metadata
-            )
-            transcoded_request = _BaseModelServiceRestTransport._BaseDeleteTunedModel._get_transcoded_request(
-                http_options, request
-            )
-
-            # Jsonify the query params
-            query_params = _BaseModelServiceRestTransport._BaseDeleteTunedModel._get_query_params_json(
-                transcoded_request
-            )
-
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                request_url = "{host}{uri}".format(
-                    host=self._host, uri=transcoded_request["uri"]
-                )
-                method = transcoded_request["method"]
-                try:
-                    request_payload = json_format.MessageToJson(request)
-                except:
-                    request_payload = None
-                http_request = {
-                    "payload": request_payload,
-                    "requestMethod": method,
-                    "requestUrl": request_url,
-                    "headers": dict(metadata),
-                }
-                _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.DeleteTunedModel",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "DeleteTunedModel",
-                        "httpRequest": http_request,
-                        "metadata": http_request["headers"],
-                    },
-                )
-
-            # Send the request
-            response = ModelServiceRestTransport._DeleteTunedModel._get_response(
-                self._host,
-                metadata,
-                query_params,
-                self._session,
-                timeout,
-                transcoded_request,
-            )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
 
     class _GetModel(_BaseModelServiceRestTransport._BaseGetModel, ModelServiceRestStub):
         def __hash__(self):
@@ -754,9 +315,9 @@ class ModelServiceRestTransport(_BaseModelServiceRestTransport):
                     "headers": dict(metadata),
                 }
                 _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.GetModel",
+                    f"Sending request for google.ai.generativelanguage_v1beta2.ModelServiceClient.GetModel",
                     extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
+                        "serviceName": "google.ai.generativelanguage.v1beta2.ModelService",
                         "rpcName": "GetModel",
                         "httpRequest": http_request,
                         "metadata": http_request["headers"],
@@ -798,153 +359,10 @@ class ModelServiceRestTransport(_BaseModelServiceRestTransport):
                     "status": response.status_code,
                 }
                 _LOGGER.debug(
-                    "Received response for google.ai.generativelanguage_v1beta3.ModelServiceClient.get_model",
+                    "Received response for google.ai.generativelanguage_v1beta2.ModelServiceClient.get_model",
                     extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
+                        "serviceName": "google.ai.generativelanguage.v1beta2.ModelService",
                         "rpcName": "GetModel",
-                        "metadata": http_response["headers"],
-                        "httpResponse": http_response,
-                    },
-                )
-            return resp
-
-    class _GetTunedModel(
-        _BaseModelServiceRestTransport._BaseGetTunedModel, ModelServiceRestStub
-    ):
-        def __hash__(self):
-            return hash("ModelServiceRestTransport.GetTunedModel")
-
-        @staticmethod
-        def _get_response(
-            host,
-            metadata,
-            query_params,
-            session,
-            timeout,
-            transcoded_request,
-            body=None,
-        ):
-            uri = transcoded_request["uri"]
-            method = transcoded_request["method"]
-            headers = dict(metadata)
-            headers["Content-Type"] = "application/json"
-            response = getattr(session, method)(
-                "{host}{uri}".format(host=host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-            )
-            return response
-
-        def __call__(
-            self,
-            request: model_service.GetTunedModelRequest,
-            *,
-            retry: OptionalRetry = gapic_v1.method.DEFAULT,
-            timeout: Optional[float] = None,
-            metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-        ) -> tuned_model.TunedModel:
-            r"""Call the get tuned model method over HTTP.
-
-            Args:
-                request (~.model_service.GetTunedModelRequest):
-                    The request object. Request for getting information about
-                a specific Model.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                    sent along with the request as metadata. Normally, each value must be of type `str`,
-                    but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                    be of type `bytes`.
-
-            Returns:
-                ~.tuned_model.TunedModel:
-                    A fine-tuned model created using
-                ModelService.CreateTunedModel.
-
-            """
-
-            http_options = (
-                _BaseModelServiceRestTransport._BaseGetTunedModel._get_http_options()
-            )
-
-            request, metadata = self._interceptor.pre_get_tuned_model(request, metadata)
-            transcoded_request = _BaseModelServiceRestTransport._BaseGetTunedModel._get_transcoded_request(
-                http_options, request
-            )
-
-            # Jsonify the query params
-            query_params = _BaseModelServiceRestTransport._BaseGetTunedModel._get_query_params_json(
-                transcoded_request
-            )
-
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                request_url = "{host}{uri}".format(
-                    host=self._host, uri=transcoded_request["uri"]
-                )
-                method = transcoded_request["method"]
-                try:
-                    request_payload = type(request).to_json(request)
-                except:
-                    request_payload = None
-                http_request = {
-                    "payload": request_payload,
-                    "requestMethod": method,
-                    "requestUrl": request_url,
-                    "headers": dict(metadata),
-                }
-                _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.GetTunedModel",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "GetTunedModel",
-                        "httpRequest": http_request,
-                        "metadata": http_request["headers"],
-                    },
-                )
-
-            # Send the request
-            response = ModelServiceRestTransport._GetTunedModel._get_response(
-                self._host,
-                metadata,
-                query_params,
-                self._session,
-                timeout,
-                transcoded_request,
-            )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = tuned_model.TunedModel()
-            pb_resp = tuned_model.TunedModel.pb(resp)
-
-            json_format.Parse(response.content, pb_resp, ignore_unknown_fields=True)
-
-            resp = self._interceptor.post_get_tuned_model(resp)
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                try:
-                    response_payload = tuned_model.TunedModel.to_json(response)
-                except:
-                    response_payload = None
-                http_response = {
-                    "payload": response_payload,
-                    "headers": dict(response.headers),
-                    "status": response.status_code,
-                }
-                _LOGGER.debug(
-                    "Received response for google.ai.generativelanguage_v1beta3.ModelServiceClient.get_tuned_model",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "GetTunedModel",
                         "metadata": http_response["headers"],
                         "httpResponse": http_response,
                     },
@@ -1043,9 +461,9 @@ class ModelServiceRestTransport(_BaseModelServiceRestTransport):
                     "headers": dict(metadata),
                 }
                 _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.ListModels",
+                    f"Sending request for google.ai.generativelanguage_v1beta2.ModelServiceClient.ListModels",
                     extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
+                        "serviceName": "google.ai.generativelanguage.v1beta2.ModelService",
                         "rpcName": "ListModels",
                         "httpRequest": http_request,
                         "metadata": http_request["headers"],
@@ -1089,327 +507,15 @@ class ModelServiceRestTransport(_BaseModelServiceRestTransport):
                     "status": response.status_code,
                 }
                 _LOGGER.debug(
-                    "Received response for google.ai.generativelanguage_v1beta3.ModelServiceClient.list_models",
+                    "Received response for google.ai.generativelanguage_v1beta2.ModelServiceClient.list_models",
                     extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
+                        "serviceName": "google.ai.generativelanguage.v1beta2.ModelService",
                         "rpcName": "ListModels",
                         "metadata": http_response["headers"],
                         "httpResponse": http_response,
                     },
                 )
             return resp
-
-    class _ListTunedModels(
-        _BaseModelServiceRestTransport._BaseListTunedModels, ModelServiceRestStub
-    ):
-        def __hash__(self):
-            return hash("ModelServiceRestTransport.ListTunedModels")
-
-        @staticmethod
-        def _get_response(
-            host,
-            metadata,
-            query_params,
-            session,
-            timeout,
-            transcoded_request,
-            body=None,
-        ):
-            uri = transcoded_request["uri"]
-            method = transcoded_request["method"]
-            headers = dict(metadata)
-            headers["Content-Type"] = "application/json"
-            response = getattr(session, method)(
-                "{host}{uri}".format(host=host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-            )
-            return response
-
-        def __call__(
-            self,
-            request: model_service.ListTunedModelsRequest,
-            *,
-            retry: OptionalRetry = gapic_v1.method.DEFAULT,
-            timeout: Optional[float] = None,
-            metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-        ) -> model_service.ListTunedModelsResponse:
-            r"""Call the list tuned models method over HTTP.
-
-            Args:
-                request (~.model_service.ListTunedModelsRequest):
-                    The request object. Request for listing TunedModels.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                    sent along with the request as metadata. Normally, each value must be of type `str`,
-                    but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                    be of type `bytes`.
-
-            Returns:
-                ~.model_service.ListTunedModelsResponse:
-                    Response from ``ListTunedModels`` containing a paginated
-                list of Models.
-
-            """
-
-            http_options = (
-                _BaseModelServiceRestTransport._BaseListTunedModels._get_http_options()
-            )
-
-            request, metadata = self._interceptor.pre_list_tuned_models(
-                request, metadata
-            )
-            transcoded_request = _BaseModelServiceRestTransport._BaseListTunedModels._get_transcoded_request(
-                http_options, request
-            )
-
-            # Jsonify the query params
-            query_params = _BaseModelServiceRestTransport._BaseListTunedModels._get_query_params_json(
-                transcoded_request
-            )
-
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                request_url = "{host}{uri}".format(
-                    host=self._host, uri=transcoded_request["uri"]
-                )
-                method = transcoded_request["method"]
-                try:
-                    request_payload = type(request).to_json(request)
-                except:
-                    request_payload = None
-                http_request = {
-                    "payload": request_payload,
-                    "requestMethod": method,
-                    "requestUrl": request_url,
-                    "headers": dict(metadata),
-                }
-                _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.ListTunedModels",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "ListTunedModels",
-                        "httpRequest": http_request,
-                        "metadata": http_request["headers"],
-                    },
-                )
-
-            # Send the request
-            response = ModelServiceRestTransport._ListTunedModels._get_response(
-                self._host,
-                metadata,
-                query_params,
-                self._session,
-                timeout,
-                transcoded_request,
-            )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = model_service.ListTunedModelsResponse()
-            pb_resp = model_service.ListTunedModelsResponse.pb(resp)
-
-            json_format.Parse(response.content, pb_resp, ignore_unknown_fields=True)
-
-            resp = self._interceptor.post_list_tuned_models(resp)
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                try:
-                    response_payload = model_service.ListTunedModelsResponse.to_json(
-                        response
-                    )
-                except:
-                    response_payload = None
-                http_response = {
-                    "payload": response_payload,
-                    "headers": dict(response.headers),
-                    "status": response.status_code,
-                }
-                _LOGGER.debug(
-                    "Received response for google.ai.generativelanguage_v1beta3.ModelServiceClient.list_tuned_models",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "ListTunedModels",
-                        "metadata": http_response["headers"],
-                        "httpResponse": http_response,
-                    },
-                )
-            return resp
-
-    class _UpdateTunedModel(
-        _BaseModelServiceRestTransport._BaseUpdateTunedModel, ModelServiceRestStub
-    ):
-        def __hash__(self):
-            return hash("ModelServiceRestTransport.UpdateTunedModel")
-
-        @staticmethod
-        def _get_response(
-            host,
-            metadata,
-            query_params,
-            session,
-            timeout,
-            transcoded_request,
-            body=None,
-        ):
-            uri = transcoded_request["uri"]
-            method = transcoded_request["method"]
-            headers = dict(metadata)
-            headers["Content-Type"] = "application/json"
-            response = getattr(session, method)(
-                "{host}{uri}".format(host=host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-                data=body,
-            )
-            return response
-
-        def __call__(
-            self,
-            request: model_service.UpdateTunedModelRequest,
-            *,
-            retry: OptionalRetry = gapic_v1.method.DEFAULT,
-            timeout: Optional[float] = None,
-            metadata: Sequence[Tuple[str, Union[str, bytes]]] = (),
-        ) -> gag_tuned_model.TunedModel:
-            r"""Call the update tuned model method over HTTP.
-
-            Args:
-                request (~.model_service.UpdateTunedModelRequest):
-                    The request object. Request to update a TunedModel.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, Union[str, bytes]]]): Key/value pairs which should be
-                    sent along with the request as metadata. Normally, each value must be of type `str`,
-                    but for metadata keys ending with the suffix `-bin`, the corresponding values must
-                    be of type `bytes`.
-
-            Returns:
-                ~.gag_tuned_model.TunedModel:
-                    A fine-tuned model created using
-                ModelService.CreateTunedModel.
-
-            """
-
-            http_options = (
-                _BaseModelServiceRestTransport._BaseUpdateTunedModel._get_http_options()
-            )
-
-            request, metadata = self._interceptor.pre_update_tuned_model(
-                request, metadata
-            )
-            transcoded_request = _BaseModelServiceRestTransport._BaseUpdateTunedModel._get_transcoded_request(
-                http_options, request
-            )
-
-            body = _BaseModelServiceRestTransport._BaseUpdateTunedModel._get_request_body_json(
-                transcoded_request
-            )
-
-            # Jsonify the query params
-            query_params = _BaseModelServiceRestTransport._BaseUpdateTunedModel._get_query_params_json(
-                transcoded_request
-            )
-
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                request_url = "{host}{uri}".format(
-                    host=self._host, uri=transcoded_request["uri"]
-                )
-                method = transcoded_request["method"]
-                try:
-                    request_payload = type(request).to_json(request)
-                except:
-                    request_payload = None
-                http_request = {
-                    "payload": request_payload,
-                    "requestMethod": method,
-                    "requestUrl": request_url,
-                    "headers": dict(metadata),
-                }
-                _LOGGER.debug(
-                    f"Sending request for google.ai.generativelanguage_v1beta3.ModelServiceClient.UpdateTunedModel",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "UpdateTunedModel",
-                        "httpRequest": http_request,
-                        "metadata": http_request["headers"],
-                    },
-                )
-
-            # Send the request
-            response = ModelServiceRestTransport._UpdateTunedModel._get_response(
-                self._host,
-                metadata,
-                query_params,
-                self._session,
-                timeout,
-                transcoded_request,
-                body,
-            )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = gag_tuned_model.TunedModel()
-            pb_resp = gag_tuned_model.TunedModel.pb(resp)
-
-            json_format.Parse(response.content, pb_resp, ignore_unknown_fields=True)
-
-            resp = self._interceptor.post_update_tuned_model(resp)
-            if CLIENT_LOGGING_SUPPORTED and _LOGGER.isEnabledFor(
-                logging.DEBUG
-            ):  # pragma: NO COVER
-                try:
-                    response_payload = gag_tuned_model.TunedModel.to_json(response)
-                except:
-                    response_payload = None
-                http_response = {
-                    "payload": response_payload,
-                    "headers": dict(response.headers),
-                    "status": response.status_code,
-                }
-                _LOGGER.debug(
-                    "Received response for google.ai.generativelanguage_v1beta3.ModelServiceClient.update_tuned_model",
-                    extra={
-                        "serviceName": "google.ai.generativelanguage.v1beta3.ModelService",
-                        "rpcName": "UpdateTunedModel",
-                        "metadata": http_response["headers"],
-                        "httpResponse": http_response,
-                    },
-                )
-            return resp
-
-    @property
-    def create_tuned_model(
-        self,
-    ) -> Callable[[model_service.CreateTunedModelRequest], operations_pb2.Operation]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._CreateTunedModel(self._session, self._host, self._interceptor)  # type: ignore
-
-    @property
-    def delete_tuned_model(
-        self,
-    ) -> Callable[[model_service.DeleteTunedModelRequest], empty_pb2.Empty]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._DeleteTunedModel(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
     def get_model(self) -> Callable[[model_service.GetModelRequest], model.Model]:
@@ -1418,38 +524,12 @@ class ModelServiceRestTransport(_BaseModelServiceRestTransport):
         return self._GetModel(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_tuned_model(
-        self,
-    ) -> Callable[[model_service.GetTunedModelRequest], tuned_model.TunedModel]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._GetTunedModel(self._session, self._host, self._interceptor)  # type: ignore
-
-    @property
     def list_models(
         self,
     ) -> Callable[[model_service.ListModelsRequest], model_service.ListModelsResponse]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
         return self._ListModels(self._session, self._host, self._interceptor)  # type: ignore
-
-    @property
-    def list_tuned_models(
-        self,
-    ) -> Callable[
-        [model_service.ListTunedModelsRequest], model_service.ListTunedModelsResponse
-    ]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._ListTunedModels(self._session, self._host, self._interceptor)  # type: ignore
-
-    @property
-    def update_tuned_model(
-        self,
-    ) -> Callable[[model_service.UpdateTunedModelRequest], gag_tuned_model.TunedModel]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._UpdateTunedModel(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
     def kind(self) -> str:
